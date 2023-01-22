@@ -1,25 +1,31 @@
-import logo from './logo.svg';
-import './App.css';
+// Library Imports
+import { Container } from "react-bootstrap"
+
+// CSS
+import "bootstrap/dist/css/bootstrap.min.css";
+
+// Page Components
+import MainView from "./views/main/MainView";
+import NavBar from "./views/NavBar"
+import { GlobalProvider } from "./contexts/GlobalContext";
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+	<GlobalProvider>
+    <Container  style={{ minHeight: "100vh", minWidth: '100vw'}}
+		className="d-flex align-items-center flex-column">
+
+		<div style={{ minHeight: "100vh", minWidth: '1250px'}}
+			className="d-flex flex-column justify-content-center">
+			<header> <NavBar/> </header>
+
+			
+				<main> <MainView/> </main>
+			
+		</div>
+    </Container>
+	</GlobalProvider>
+  )
 }
 
-export default App;
+export default App
