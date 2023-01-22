@@ -42,7 +42,7 @@ export default function BlackBoard(props) {
 		if (userState !== null) {
 			console.log(userState)
 			setRequiresInput(false)
-    	console.log(keyPressed)
+			console.log(keyPressed)
 		}
 
 
