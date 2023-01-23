@@ -7,10 +7,16 @@ export function useGlobal() {
 }
 
 export function GlobalProvider({ children }) {
-	const [userData, setUserData] = useState(null)
+	const [fullscreen, setFullscreen] = useState(false)
+
+	const enableFullscreen = () => setFullscreen(true)
+	const disableFullscreen = () => setFullscreen(false)
+	const isFullscreen = () => fullscreen
 
     const value = {
-		userData, setUserData
+		enableFullscreen,
+		disableFullscreen,
+		isFullscreen
     }
 
 	return (

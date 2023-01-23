@@ -123,52 +123,54 @@ function StroopText() {
 
     // Handles main key press for each round of the stroop text
     function handleKeyDown(e) {
-        if (!complete) {
-            e.preventDefault();
+        const keyCode = e.keyCode
+        console.log(keyCode)
+        // if (!complete) {
+        //     e.preventDefault();
 
-            const keyCode = e.keyCode
-            const keyPressed = String.fromCharCode(keyCode).toUpperCase();
+        //     const keyCode = e.keyCode
+        //     const keyPressed = String.fromCharCode(keyCode).toUpperCase();
 
-            // If one of the specified keys is pressed
-            if (stroopKeys.includes(keyPressed)) {
+        //     // If one of the specified keys is pressed
+        //     if (stroopKeys.includes(keyPressed)) {
 
-                if (!keyPressRef.current) {
-                    console.log(keyPressed)
-                    keyPressRef.current = true
+        //         if (!keyPressRef.current) {
+        //             console.log(keyPressed)
+        //             keyPressRef.current = true
 
-                    const {text, congruent} = stroopText
-                    let {color} = stroopText
+        //             const {text, congruent} = stroopText
+        //             let {color} = stroopText
 
-                    const correct = (keyPressed === color.charAt(0))
-                    const endTime = {
-                        sec: new Date().getSeconds(),
-                        ms: new Date().getMilliseconds()
-                    }
-                    const startTime = timestamp
+        //             const correct = (keyPressed === color.charAt(0))
+        //             const endTime = {
+        //                 sec: new Date().getSeconds(),
+        //                 ms: new Date().getMilliseconds()
+        //             }
+        //             const startTime = timestamp
 
-                    trialData[`${mode}Rounds`].push({
-                        roundNum: currentRound,
-                        keyPressed,
-                        text,
-                        color: color.split('-')[0],
-                        congruent,
-                        correct,
-                        roundTime: {
-                            startTime,
-                            endTime
-                        }
-                    })
+        //             trialData[`${mode}Rounds`].push({
+        //                 roundNum: currentRound,
+        //                 keyPressed,
+        //                 text,
+        //                 color: color.split('-')[0],
+        //                 congruent,
+        //                 correct,
+        //                 roundTime: {
+        //                     startTime,
+        //                     endTime
+        //                 }
+        //             })
 
-                    if (congruent) trialData.totalCongruent++
-                    if (correct) trialData.totalCorrect++
+        //             if (congruent) trialData.totalCongruent++
+        //             if (correct) trialData.totalCorrect++
 
-                    console.log(trialData)
-                }
-            } else {
-                e.preventDefault()
-                console.log('Nothing corresponding to: ', keyPressed)
-            }
-        }
+        //             console.log(trialData)
+        //         }
+        //     } else {
+        //         e.preventDefault()
+        //         console.log('Nothing corresponding to: ', keyPressed)
+        //     }
+        // }
     }
 
 

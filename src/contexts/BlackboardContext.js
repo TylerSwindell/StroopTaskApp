@@ -24,22 +24,7 @@ export function BlackboardProvider({ children }) {
         complete, paused, currentSlide, currentElement,
         slideContent, userState, totalSlides
     } = state
-
-    const nextSlide = () => {
-            dispatch({ type: SLIDES_NEXT })
-    }
-
-    const nextRound = () => {
-        dispatch({ type: ROUND_NEXT })
-    }
-
-    const prevSlide = () => {
-        console.log(totalSlides, currentSlide)
-        if (currentSlide > 0) 
-            dispatch({ type: SLIDES_PREV })
-        else console.log('NO MORE SLIDES')
-    }
-
+    
     const setCurrentElement = (ele) => {
         dispatch({
             type: SET_CONTENT,
@@ -53,6 +38,27 @@ export function BlackboardProvider({ children }) {
             payload: mode
         })
     }
+
+    const nextSlide = () => {
+        // Guard clause
+        if (currentSlide === totalSlides-1) return false
+        
+        dispatch({ type: SLIDES_NEXT }) 
+        return true
+    }
+    
+    const prevSlide = () => {
+        // Guard clause
+        if (currentSlide === 0) return false     
+
+        dispatch({ type: SLIDES_PREV }) 
+        return true
+    }
+    
+    const nextRound = () => {
+        dispatch({ type: ROUND_NEXT })
+    }
+
 
     const setUserState = (userState) => {
         dispatch({
@@ -75,6 +81,12 @@ export function BlackboardProvider({ children }) {
             payload: time
         })
     }
+    
+    const startPractice = () => {
+        dispatch({
+            type: PRACTICE_START
+        })
+    }
 
     const value = { 
         timestamp, currentRound, mode,
@@ -86,7 +98,7 @@ export function BlackboardProvider({ children }) {
         setUserState,
         setMode, setComplete,
         prevSlide, setTimestamp,
-        nextRound
+        nextRound, startPractice
     }
 
     return (

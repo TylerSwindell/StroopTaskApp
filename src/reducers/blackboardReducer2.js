@@ -1,7 +1,7 @@
 import Slide from "../pages/blackboard/components/Slide"
 import SlideContent from '../pages/blackboard/config/SlideContent'
 import { BLACKBOARD } from "../config/actionTypes"
-import StroopText from "../pages/blackboard/components/stroop/StroopText"
+import StroopText from "../pages/blackboard/components/stroop/StroopTask2"
 
 const { 
     SLIDES_START, SLIDES_NEXT, SLIDES_END, 

@@ -8,6 +8,7 @@ import PathList from "../../config/Paths"
 
 // Authentication and Config
 import { useAuth } from "../../contexts/AuthContext"
+import { useGlobal } from "../../contexts/GlobalContext"
 
 // Styles
 import './styles.css'
@@ -23,9 +24,10 @@ import { BlackboardProvider } from '../../contexts/BlackboardContext'
 
 export default function MainView() {
       const auth = useAuth()
+      const {isFullscreen} = useGlobal()
       
       return (
-            <Card className={'MainView'} >
+            <Card className={isFullscreen() ? 'MainView-fs' : 'MainView'} >
                   <Router>
                         <Routes>
 
