@@ -5,7 +5,20 @@ export const INITIAL_STATE = {
 }
 
 export function userDataReducer(state, action) {
-    switch(action.type) {
-        
+    const {type, payload} = action
+
+    switch(type) {
+        case 'NEW_SESSION':
+            return {    
+                pid: payload,
+                listOfTrials: [ ]
+            }
+        case 'PUSH_TRIAL':
+            const listOfTrials = state.listOfTrials.push(payload)
+            return {    
+                ...state,
+                listOfTrials
+            }
+        default: throw new Error(`No case for type ${type}`)
     }
 }

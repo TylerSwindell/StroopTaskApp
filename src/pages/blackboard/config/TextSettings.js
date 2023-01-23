@@ -11,11 +11,11 @@
       'Blue-text'
     ],
     colorOptionsObj = {
-      defaultText: 'Default-text',
-      redText: 'Red-text', 
-      yellowText: 'Yellow-text', 
-      greenText: 'Green-text', 
-      blueText: 'Blue-text'
+      defaultText: 'default-text',
+      redText: 'red-text', 
+      yellowText: 'yellow-text', 
+      greenText: 'green-text', 
+      blueText: 'blue-text'
     },
     textOptions = [
       '+',

@@ -1,5 +1,6 @@
 import { createContext, useContext, useReducer } from "react";
-import blackboardReducer, { INITIAL_STATE } from "../reducers/blackboardReducer";
+import { StroopTaskProvider } from './StoopTaskContext'
+import blackboardReducer, { INITIAL_STATE as initialBlackboardState } from "../reducers/blackboardReducer";
 import {BLACKBOARD} from '../config/actionTypes'
 
 const { 
@@ -11,29 +12,34 @@ const {
     SLIDES_PREV,SET_USER_STATE,ROUND_NEXT
 } = BLACKBOARD
 
-export const BlackboardContext = createContext(INITIAL_STATE)
+export const BlackboardContext = createContext(initialBlackboardState)
 
 export function useBlackboard() {
     return useContext(BlackboardContext)
   }
 
 export function BlackboardProvider({ children }) {
-	const [state, dispatch] = useReducer(blackboardReducer, INITIAL_STATE)
-    const {
-        timestamp, mode, currentRound, started,
-        complete, paused, currentSlide, currentElement,
-        slideContent, userState, totalSlides
-    } = state
+
+    // Reducers
+	const [blackboardState, blackboardDispatch] = useReducer(blackboardReducer, initialBlackboardState),
+        {
+            timestamp, mode, currentRound, started,
+            complete, paused, currentSlide, currentElement,
+            userState, totalSlides
+        } = blackboardState
+
+    // Context Methods
     
+    // Blackboard Reducer Methods
     const setCurrentElement = (ele) => {
-        dispatch({
+        blackboardDispatch({
             type: SET_CONTENT,
             payload: ele
         })
     }
 
     const setMode = (mode) => {
-        dispatch({
+        blackboardDispatch({
             type: SET_MODE,
             payload: mode
         })
@@ -43,7 +49,7 @@ export function BlackboardProvider({ children }) {
         // Guard clause
         if (currentSlide === totalSlides-1) return false
         
-        dispatch({ type: SLIDES_NEXT }) 
+        blackboardDispatch({ type: SLIDES_NEXT }) 
         return true
     }
     
@@ -51,39 +57,39 @@ export function BlackboardProvider({ children }) {
         // Guard clause
         if (currentSlide === 0) return false     
 
-        dispatch({ type: SLIDES_PREV }) 
+        blackboardDispatch({ type: SLIDES_PREV }) 
         return true
     }
     
     const nextRound = () => {
-        dispatch({ type: ROUND_NEXT })
+        blackboardDispatch({ type: ROUND_NEXT })
     }
 
 
     const setUserState = (userState) => {
-        dispatch({
+        blackboardDispatch({
             type: SET_USER_STATE,
             payload: userState
         })
     }
 
     const setPaused = (bool) => {
-        dispatch({type: SET_PAUSE, payload: bool})
+        blackboardDispatch({type: SET_PAUSE, payload: bool})
     }
 
     const setComplete = (bool) => {
-        dispatch({type: SET_COMPLETE, payload: bool})
+        blackboardDispatch({type: SET_COMPLETE, payload: bool})
     }
 
     const setTimestamp = (time) => {
-        dispatch({
+        blackboardDispatch({
             type: SET_TIMESTAMP,
             payload: time
         })
     }
     
     const startPractice = () => {
-        dispatch({
+        blackboardDispatch({
             type: PRACTICE_START
         })
     }
@@ -102,8 +108,11 @@ export function BlackboardProvider({ children }) {
     }
 
     return (
-        <BlackboardContext.Provider value={ value }>
-          	{children}
-        </BlackboardContext.Provider>
+        
+            <BlackboardContext.Provider value={ value }>
+                <StroopTaskProvider>
+                    {children}
+                </StroopTaskProvider>
+            </BlackboardContext.Provider>
 	)
 }

@@ -39,7 +39,10 @@ export default function MainView() {
                               <Route exact path={PathList.stroopTask}         element={ <UpdateProfile/> }/>
                               <Route exact path={PathList.settings}           element={ <UpdateProfile/> }/>
                               <Route exact path={PathList.blackboard}         
-                                    element={ <BlackboardProvider> <BlackBoard /> </BlackboardProvider> }/>
+                                    element={ 
+                                          <BlackboardProvider> 
+                                                <BlackBoard /> 
+                                          </BlackboardProvider> }/>
 
                               <Route exact path={PathList.home}
                                     element={ 

@@ -2,18 +2,19 @@ import React, { useEffect, useState } from 'react'
 import { Alert, Card } from 'react-bootstrap'
 import { useBlackboard } from '../../contexts/BlackboardContext'
 import { useGlobal } from '../../contexts/GlobalContext'
+import { useStroop } from '../../contexts/StoopTaskContext'
+import { StroopTextProvider } from '../../contexts/StroopTextContext'
 import SearchForm from '../dashboard/components/SearchForm'
-import SlideContent from './config/SlideContent'
 
-
-const endOfSlideArray = SlideContent.slides.length-1
 export default function BlackBoard() {
 
   	// Contexts
-	  const {enableFullscreen, disableFullscreen} = useGlobal()
+	const {enableFullscreen, disableFullscreen} = useGlobal()
     const { currentElement, mode, prevSlide, nextSlide, setCurrentElement,
             setMode, userState, setUserState, totalSlides, currentSlide, startPractice, 
     } = useBlackboard()
+
+	const { pushTrial } = useStroop()
 
     // State
     const [error, setError] = useState('')
@@ -45,22 +46,6 @@ export default function BlackBoard() {
 			default: console.error('slides: no bound action to key', keyPressed)
 		}
 	}
-
-	function handleStroopKeyDown(keyCode) {
-		const keyPressed = String.fromCharCode(keyCode).toUpperCase()
-		console.log('practice: ', keyPressed)
-
-		switch(keyPressed) {
-			case 'R': 
-			case 'G': 
-			case 'B': 
-			case 'Y': console.log(keyPressed)
-				break 
-			default: console.error('Not a valid keyPress')
-		}
-		
-	}
-
 	function handleKeyDown(e) {
 		if (mode !== 'login') e.preventDefault()
 
@@ -76,7 +61,7 @@ export default function BlackBoard() {
 			case 'slides': handleSlidesKeyDown(keyCode)
 				break
 			case 'practice':
-			case 'final': handleStroopKeyDown(keyCode)
+			case 'final':
 				break
 			default: console.error('No case provided for keyDown in ', mode, ': BlackBoard.js')
 		}
@@ -87,8 +72,9 @@ export default function BlackBoard() {
 			<Card tabIndex={0} className='blackboard'>
 
 				<p className='user-id'> ID: {(searchState && searchState.pid) || 'Unassigned'} </p>
-
-				{ !searchState ? searchFormEle : currentElement }
+				<StroopTextProvider>
+					{ !searchState ? searchFormEle : currentElement }
+				</StroopTextProvider>
 
 				<div className='error-container'>{error && <Alert variant="danger">{error}</Alert>}</div>
 			</Card>

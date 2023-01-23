@@ -36,11 +36,11 @@
 .slide-body-text { color:rgb(210, 216, 222); }
 .slide-footer-text { color: red; }
 
-.Red-text { color: red; }
-.Yellow-text { color: yellow; }
-.Green-text { color: green; }
-.Blue-text { color: rgb(27 148 255); }
-.Default-text { color: white; }
+.red-text { color: red; }
+.yellow-text { color: yellow; }
+.green-text { color: green; }
+.blue-text { color: rgb(27 148 255); }
+.default-text { color: white; }
 
 
 .user-id {

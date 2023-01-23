@@ -7,8 +7,6 @@ export const INITIAL_STATE = {
 
 export function userSearchReducer(state, action) {
 
-    console.log(action.type, state)
-
     switch(action.type) {
         case "SEARCH_START":
             return {

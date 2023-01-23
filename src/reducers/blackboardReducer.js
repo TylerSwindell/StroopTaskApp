@@ -1,7 +1,7 @@
 import Slide from "../pages/blackboard/components/Slide"
 import SlideContent from '../pages/blackboard/config/SlideContent'
 import { BLACKBOARD } from "../config/actionTypes"
-import StroopText from "../pages/blackboard/components/stroop/StroopText"
+import StroopTask from "../pages/blackboard/components/stroop/StroopTask"
 
 const { 
     SLIDES_START, SLIDES_NEXT, SLIDES_END, 
@@ -29,8 +29,6 @@ export const INITIAL_STATE = {
 
 export default function blackboardReducer(state, action) {
     const {type, payload} = action
-
-    console.log(type, state)
 
     switch(type) {
         case SLIDES_START:
@@ -60,7 +58,7 @@ export default function blackboardReducer(state, action) {
             return {
                 ...state,
                 mode: 'practice',
-                currentElement: <StroopText />
+                currentElement: <StroopTask />
             }
         case PRACTICE_END:
             return {
