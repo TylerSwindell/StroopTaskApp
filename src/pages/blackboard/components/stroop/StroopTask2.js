@@ -37,8 +37,8 @@ const stroopKeys = textOptions.map((text) => text.charAt(0)).slice(1)
 * Contains entire stroop test functionality 
 */
 function StroopText() {
-    const { currentElement, currentRound, mode, prevSlide, nextSlide, setCurrentElement, setPaused, setTimestamp,
-        setMode, setUserState, totalSlides, currentSlide, paused, complete, timestamp, nextRound, setComplete
+    const { currentRound, mode, setCurrentElement, setPaused, setTimestamp,
+        setMode, paused, timestamp, nextRound, setComplete
 } = useBlackboard()
 
     //console.log(user)

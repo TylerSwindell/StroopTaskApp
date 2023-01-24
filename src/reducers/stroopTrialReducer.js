@@ -1,13 +1,10 @@
 import { STROOP_TRIALS } from "../config/actionTypes"
 
 const { 
-    SET_DATE,
-    SET_TIME_START,
-    SET_END_START,
-    PUSH_PRACTICE_TRIAL,
-    PUSH_FINAL_TRIAL,
-    ADD_CORRECT,
-    ADD_CONGRUENT
+    SET_DATE, SET_TIME_START, SET_END_START,
+    PUSH_PRACTICE_TRIAL, PUSH_FINAL_TRIAL, RESET, 
+    PUSH_ALL_TRIALS, ADD_CORRECT, ADD_CONGRUENT,
+    SET_CONGRUENT,
 } = STROOP_TRIALS
 
 export const INITIAL_STATE = {
@@ -16,8 +13,8 @@ export const INITIAL_STATE = {
         month: null,
         year: null
     }, 
-    startTime: null,
-    endTime: null,
+    startTime:  { h: null, m: null, s: null },
+    endTime:    { h: null, m: null, s: null },
     practiceRounds: [],
     finalRounds: [],
     totalCongruent: 0,
@@ -44,18 +41,34 @@ export default function stroopTrialReducer(state, action) {
                 ...state,
                 endTime: payload
             }
-        case PUSH_PRACTICE_TRIAL:
+        case SET_CONGRUENT:
+            return {
+                ...state,
+                totalCongruent: payload
+
+            }
+        case PUSH_PRACTICE_TRIAL: {
             const practiceRounds = state.practiceRounds.push(payload)
             return {    
                 ...state,
                 practiceRounds
             }
-        case PUSH_FINAL_TRIAL:
+        }
+        case PUSH_FINAL_TRIAL: {
             const finalRounds = state.finalRounds.push(payload)
             return {    
                 ...state,
                 finalRounds
             }
+        }
+        case PUSH_ALL_TRIALS: {
+            const { finalRounds, practiceRounds } = payload
+            return {    
+                ...state,
+                practiceRounds,
+                finalRounds
+            }
+        }
         case ADD_CORRECT:
             return {
                 ...state,
@@ -66,6 +79,7 @@ export default function stroopTrialReducer(state, action) {
                     ...state,
                     totalCongruent: (state.totalCongruent + 1)
                 }
+        case RESET: return INITIAL_STATE
         default: throw new Error(`No case for type ${type}`)
     }
 }

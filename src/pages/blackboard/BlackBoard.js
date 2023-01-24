@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { Alert, Card } from 'react-bootstrap'
 import { useBlackboard } from '../../contexts/BlackboardContext'
 import { useGlobal } from '../../contexts/GlobalContext'
-import { useStroop } from '../../contexts/StoopTaskContext'
+import { useStroopTask } from '../../contexts/StoopTaskContext'
 import { StroopTextProvider } from '../../contexts/StroopTextContext'
 import SearchForm from '../dashboard/components/SearchForm'
 
@@ -14,7 +14,8 @@ export default function BlackBoard() {
             setMode, userState, setUserState, totalSlides, currentSlide, startPractice, 
     } = useBlackboard()
 
-	const { pushTrial } = useStroop()
+	const { trial } = useStroopTask()
+	const { newTrial } = trial
 
     // State
     const [error, setError] = useState('')
@@ -22,16 +23,17 @@ export default function BlackBoard() {
 
     const searchFormEle = (
 		<SearchForm 
-		styles={{backgroundColor: 'none'}} 
-		errorState={{error, setError}} 
-		searchState={{setSearchState}}
-		customClasses='blackboardsearch'/>
+			styles={{backgroundColor: 'none'}} 
+			errorState={{error, setError}} 
+			searchState={{setSearchState}}
+			customClasses='blackboardsearch'/>
 	)
 
   	useEffect(()=> {
     	if (searchState) {
       		setUserState(searchState)
       		setMode('slides')
+			newTrial()
     	}
   	}, [searchState])
 

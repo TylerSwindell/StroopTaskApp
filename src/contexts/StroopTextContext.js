@@ -10,31 +10,25 @@ export function useStroopText() {
     return useContext(StroopTextContext)
   }
 
-export const  
-    fixationCrossTimeout = 350,
-    stroopWordInterval = 1500,
-    stroopTaskInterval = (fixationCrossTimeout + stroopWordInterval),
-    colorOptions = [
-        'default',
-        'red', 
-        'yellow', 
-        'green', 
-        'blue'
-    ],
-    textOptions = [
-        '+',
-        'red', 
-        'yellow', 
-        'green', 
-        'blue'
-    ]
+const fixationCrossTimeout = 350, stroopWordInterval = 1500
+
+const CONSTANTS = {
+    fixationCrossTimeout,
+    stroopWordInterval,
+    stroopTaskInterval: (fixationCrossTimeout + stroopWordInterval),
+    fixationCross: '+',
+    colorOptions: [ 'red', 'yellow', 'green', 'blue' ]
+}
+
+
 
 export function StroopTextProvider({ children }) {
+    const {colorOptions, fixationCross} = CONSTANTS
 
     // Reducers
 		const [state, dispatch] = useReducer(stroopTextReducer, initialTextState)
 
-    // Trial Reducer Methods
+    // Text Reducer Methods
     const setText = ({color, text}) => {
         dispatch({
             type: SET_STROOP_TEXT,
@@ -42,17 +36,22 @@ export function StroopTextProvider({ children }) {
         })
     }
 
-    const HIGH = (colorOptions.length-1), LOW = 1;
+    const HIGH = (colorOptions.length), LOW = 0;
     const randomizeText = () => {
         setText({
             color: colorOptions[(Math.floor(Math.random() * HIGH) + LOW)], 
-            text: textOptions[(Math.floor(Math.random() * HIGH) + LOW)]
+            text: colorOptions[(Math.floor(Math.random() * HIGH) + LOW)]
         })
+    }
+
+    const renderFixationCross = () => {
+        setText({color: 'white', text: fixationCross})
     }
 
     const value = {
         stroopText: {...state},
-        setText, randomizeText
+        setText,
+        CONSTANTS
 
     }
 

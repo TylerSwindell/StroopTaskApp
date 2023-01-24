@@ -13,12 +13,10 @@ export default function stroopTextReducer(state, action) {
 
     switch(type) {
         case SET_STROOP_TEXT: 
-            const {text, color} = payload,
+            const { text, color } = payload,
                 congruent = (text.toLowerCase() === color.toLowerCase())
 
-            return {
-                text, color, congruent
-            }
+            return { text, color, congruent }
         
         default: throw new Error(`No case for type ${type}`)
     }
