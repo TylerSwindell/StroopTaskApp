@@ -3,7 +3,7 @@ import Nav from 'react-bootstrap/Nav'
 import Navbar from 'react-bootstrap/Navbar'
 import NavDropdown from 'react-bootstrap/NavDropdown'
 import PathList from '../config/Paths'
-import { useAuth } from '../contexts/AuthContext'
+import { useAuth } from '../contexts/auth-context/AuthContext'
 
 
 function NavBar(props) {

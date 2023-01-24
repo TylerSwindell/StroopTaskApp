@@ -1,6 +1,6 @@
 import StroopText from "./StroopText"
-import { useStroopText } from "../../../../contexts/StroopTextContext"
-import { useStroopTask } from "../../../../contexts/StoopTaskContext"
+import { useStroopText } from "../../../../contexts/stroop-context/text-context/StroopTextContext"
+import { useStroopTask } from "../../../../contexts/stroop-context/task-context/StoopTaskContext"
 import { useEffect } from "react"
 import { useState } from "react"
 

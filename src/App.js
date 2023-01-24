@@ -7,7 +7,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 // Page Components
 import MainView from "./views/main/MainView";
 import NavBar from "./views/NavBar"
-import { GlobalProvider } from "./contexts/GlobalContext";
+import { GlobalProvider } from "./contexts/global-context/GlobalContext";
 
 function App() {
   return (

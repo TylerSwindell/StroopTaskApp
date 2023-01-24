@@ -1,12 +1,12 @@
-import { createContext, useContext, useReducer, useState } from "react";
-import stroopTrialReducer, { INITIAL_STATE as initialTrialState } from "../reducers/stroopTrialReducer";
-import stroopRoundReducer, { INITIAL_STATE as initialRoundState } from "../reducers/stroopRoundReducer";
+import { createContext, useContext, useReducer } from "react";
+import stroopTrialReducer, { INITIAL_STATE as initialTrialState } from "../../../reducers/stroopTrialReducer";
+import stroopRoundReducer, { INITIAL_STATE as initialRoundState } from "../../../reducers/stroopRoundReducer";
 
-import { STROOP_TRIALS } from "../config/actionTypes";
+import STROOP_TRIAL_ACTION_TYPES from "../../../config/action-types/stroopTrialActionTypes";
 const { 
     RESET, PUSH_PRACTICE_TRIAL, PUSH_FINAL_TRIAL, SET_DATE, 
     SET_TIME_START, PUSH_ALL_TRIALS, SET_CONGRUENT, 
-} = STROOP_TRIALS
+} = STROOP_TRIAL_ACTION_TYPES
 
 const fixationCrossTimeout = 350, stroopWordInterval = 1500
 
@@ -25,8 +25,6 @@ export const StroopTaskContext = createContext(initialTrialState)
 export const useStroopTask = () => useContext(StroopTaskContext)
 
 export const StroopTaskProvider = ({ children }) => {
-    const [colorList, setColorList] = useState([])
-
     // Reducers
     const [trialState, trialDispatch] = useReducer(stroopTrialReducer, initialTrialState)
     const [roundState, roundDispatch] = useReducer(stroopRoundReducer, initialRoundState)
@@ -39,7 +37,7 @@ export const StroopTaskProvider = ({ children }) => {
 
         for (let i = 0; i < TOTAL_ROUND_COUNT; i++) {
 
-            const   color = CONSTANTS.colorOptions[(Math.floor(Math.random() * HIGH) + LOW)]
+            const color = CONSTANTS.colorOptions[(Math.floor(Math.random() * HIGH) + LOW)]
             const text = CONSTANTS.colorOptions[(Math.floor(Math.random() * HIGH) + LOW)]
             const congruent = (text === color)
             const stroopText = { text, color, congruent }

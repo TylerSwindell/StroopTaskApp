@@ -7,8 +7,8 @@ import PrivateRoute from "../../setup/PrivateRoute"
 import PathList from "../../config/Paths"
 
 // Authentication and Config
-import { useAuth } from "../../contexts/AuthContext"
-import { useGlobal } from "../../contexts/GlobalContext"
+import { useAuth } from "../../contexts/auth-context/AuthContext"
+import { useGlobal } from "../../contexts/global-context/GlobalContext"
 
 // Styles
 import './styles.css'
@@ -20,7 +20,7 @@ import ForgotPassword from "../../pages/forgot-password/ForgotPassword"
 import Dashboard from "../../pages/dashboard/Dashboard"
 import BlackBoard from "../../pages/blackboard/BlackBoard"
 import AddParticipant from "../../pages/dashboard/components/AddParticipant"
-import { BlackboardProvider } from '../../contexts/BlackboardContext'
+import { BlackboardProvider } from '../../contexts/blackboard-context/BlackboardContext'
 
 export default function MainView() {
       const auth = useAuth()

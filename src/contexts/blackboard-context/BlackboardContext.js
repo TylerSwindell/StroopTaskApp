@@ -1,7 +1,7 @@
 import { createContext, useContext, useReducer } from "react";
-import { StroopTaskProvider } from './StoopTaskContext'
-import blackboardReducer, { INITIAL_STATE as initialBlackboardState } from "../reducers/blackboardReducer";
-import {BLACKBOARD} from '../config/actionTypes'
+import { StroopTaskProvider } from '../stroop-context/task-context/StoopTaskContext'
+import blackboardReducer, { INITIAL_STATE as initialBlackboardState } from "../../reducers/blackboardReducer";
+import {BLACKBOARD} from '../../config/actionTypes'
 
 const { 
     SLIDES_START, SLIDES_NEXT, SLIDES_END, 

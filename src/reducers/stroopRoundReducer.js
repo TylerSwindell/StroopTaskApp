@@ -1,9 +1,9 @@
-import STROOP_ROUNDS from "../config/action-types/stroopRoundAC"
+import STROOP_ROUND_ACTION_TYPES from "../config/action-types/stroopRoundActionTypes"
 
 const { 
     SET_ROUND, SET_KEYPRESS, SET_TIME_START, SET_TIME_END, 
     SET_CORRECT, SET_CONGRUENT, NO_KEY_PRESS, NEW_ROUND,
-} = STROOP_ROUNDS
+} = STROOP_ROUND_ACTION_TYPES
 
 export const INITIAL_STATE = {
     roundNum: 0,

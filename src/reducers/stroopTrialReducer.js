@@ -1,11 +1,11 @@
-import { STROOP_TRIALS } from "../config/actionTypes"
+import STROOP_TRIAL_ACTION_TYPES from "../config/action-types/stroopTrialActionTypes"
 
 const { 
     SET_DATE, SET_TIME_START, SET_END_START,
     PUSH_PRACTICE_TRIAL, PUSH_FINAL_TRIAL, RESET, 
     PUSH_ALL_TRIALS, ADD_CORRECT, ADD_CONGRUENT,
     SET_CONGRUENT,
-} = STROOP_TRIALS
+} = STROOP_TRIAL_ACTION_TYPES
 
 export const INITIAL_STATE = {
     date: {

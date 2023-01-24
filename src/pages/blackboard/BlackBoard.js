@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import { Alert, Card } from 'react-bootstrap'
-import { useBlackboard } from '../../contexts/BlackboardContext'
-import { useGlobal } from '../../contexts/GlobalContext'
-import { useStroopTask } from '../../contexts/StoopTaskContext'
-import { StroopTextProvider } from '../../contexts/StroopTextContext'
+import { useBlackboard } from '../../contexts/blackboard-context/BlackboardContext'
+import { useGlobal } from '../../contexts/global-context/GlobalContext'
+import { useStroopTask } from '../../contexts/stroop-context/task-context/StoopTaskContext'
+import { StroopTextProvider } from '../../contexts/stroop-context/text-context/StroopTextContext'
 import SearchForm from '../dashboard/components/SearchForm'
 
 export default function BlackBoard() {
