@@ -1,7 +1,7 @@
 import { createContext, useContext, useReducer } from "react";
 import { StroopTaskProvider } from '../stroop-context/task-context/StoopTaskContext'
-import blackboardReducer, { INITIAL_STATE as initialBlackboardState } from "../../reducers/blackboardReducer";
-import {BLACKBOARD} from '../../config/actionTypes'
+import blackboardReducer, { BLACKBOARD_MODES, INITIAL_STATE as initialBlackboardState } from "../../reducers/blackboardReducer";
+import BLACKBOARD_ACTION_TYPES from '../../config/action-types/blackboardActionTypes'
 
 const { 
     SLIDES_START, SLIDES_NEXT, SLIDES_END, 
@@ -9,8 +9,15 @@ const {
     STROOP_END, LOADING_START, LOADING_COMPLETE, 
     NEXT_ROUND, SET_PAUSE, SET_MODE, SET_STARTED,
     SET_CONTENT, SET_COMPLETE, SET_TIMESTAMP,
-    SLIDES_PREV,SET_USER_STATE,ROUND_NEXT
-} = BLACKBOARD
+    SLIDES_PREV, SET_USER_STATE, ROUND_NEXT, 
+    SET_FIXATION_MODE, 
+} = BLACKBOARD_ACTION_TYPES
+
+const {
+    LOGIN,
+    PRACTICE, PRACTICE_COMPLETE,
+    FINAL, FINAL_COMPLETE, SLIDES
+} = BLACKBOARD_MODES
 
 export const BlackboardContext = createContext(initialBlackboardState)
 
@@ -87,6 +94,12 @@ export function BlackboardProvider({ children }) {
             payload: time
         })
     }
+
+    const startSlides = () => {
+        blackboardDispatch({
+            type: SLIDES_START
+        })
+    }
     
     const startPractice = () => {
         blackboardDispatch({
@@ -94,17 +107,52 @@ export function BlackboardProvider({ children }) {
         })
     }
 
+    const endPractice = () => {
+        blackboardDispatch({
+            type: PRACTICE_END
+        })
+    }
+
+    const startStroop = () => {
+        blackboardDispatch({
+            type: STROOP_START
+        })
+    }
+
+    const endStroop = () => {
+        blackboardDispatch({
+            type: STROOP_END
+        })
+    }
+
+    const isRoundInitialized = () => currentElement !== null
+
+    const setFixationMode = (payload) => {
+        blackboardDispatch({
+            type: SET_FIXATION_MODE,
+            payload
+        })
+    }
+
+    const checkMode = (m) => (m === mode)
+
     const value = { 
+        BLACKBOARD_MODES,
         timestamp, currentRound, mode,
         started, complete, paused,
         currentSlide, currentElement,
-        userState, totalSlides,
+        userState, totalSlides, 
+        blackboardState,
         setCurrentElement,
         nextSlide, setPaused,
         setUserState,
         setMode, setComplete,
         prevSlide, setTimestamp,
-        nextRound, startPractice
+        nextRound, startPractice,
+        endPractice, endStroop,
+        checkMode, startSlides,
+        startStroop, setFixationMode,
+        isRoundInitialized
     }
 
     return (

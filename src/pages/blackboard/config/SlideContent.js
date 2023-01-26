@@ -38,10 +38,17 @@ const data = {
             continueKeys: "space"
         }
     ],
-    final: {
-        slideText: `The practice round is complete. 
+    practiceComplete: {
+        slideText: `The practice session is complete. 
                     <br> <br>
                     You will now begin the final trial that will be recorded.`,
+        continueText: "PRESS 'SPACE' TO BEGIN",
+        continueKeys: "space"
+    },
+    stroopComplete: {
+        slideText: `The final session is complete. 
+        <br> <br>
+        You will now begin the final trial that will be recorded.`,
         continueText: "PRESS 'SPACE' TO BEGIN",
         continueKeys: "space"
     }

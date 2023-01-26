@@ -1,25 +1,41 @@
+// REACT LIBRARY
 import { createContext, useContext, useReducer } from "react";
+
+// REDUCER IMPORTS
 import stroopTrialReducer, { INITIAL_STATE as initialTrialState } from "../../../reducers/stroopTrialReducer";
 import stroopRoundReducer, { INITIAL_STATE as initialRoundState } from "../../../reducers/stroopRoundReducer";
 
+// ACTION TYPE IMPORTS
 import STROOP_TRIAL_ACTION_TYPES from "../../../config/action-types/stroopTrialActionTypes";
+import STROOP_ROUND_ACTION_TYPES from "../../../config/action-types/stroopRoundActionTypes"
+
+// ACTION TYPE DESTRUCTURING
 const { 
-    RESET, PUSH_PRACTICE_TRIAL, PUSH_FINAL_TRIAL, SET_DATE, 
-    SET_TIME_START, PUSH_ALL_TRIALS, SET_CONGRUENT, 
+    RESET, PUSH_PRACTICE_TRIAL, PUSH_FINAL_TRIAL, 
+    SET_DATE, PUSH_ALL_ROUNDS, SET_CONGRUENT,
+    PUSH_PRACTICE_ROUNDS,
 } = STROOP_TRIAL_ACTION_TYPES
 
-const fixationCrossTimeout = 350, stroopWordInterval = 1500
+const { 
+    NEW_ROUND, SET_ROUND, NEXT_ROUND, 
+    SET_TIME_START, SET_TIME_END, SET_CORRECT
+} = STROOP_ROUND_ACTION_TYPES
 
+// CONSTANT DECLARATIONS
+const fixationCrossTimeout = 350, stroopWordInterval = 1500,
+        stroopTaskInterval = fixationCrossTimeout + stroopWordInterval
 const CONSTANTS = {
     practiceRoundCount: 10,
     finalRoundCount: 40,
     fixationCrossTimeout,
     stroopWordInterval,
-    stroopTaskInterval: (fixationCrossTimeout + stroopWordInterval),
+    stroopTaskInterval,
     fixationCross: '+',
     colorOptions: [ 'red', 'yellow', 'green', 'blue' ]
-}, HIGH = (CONSTANTS.colorOptions.length), LOW = 0, 
-    TOTAL_ROUND_COUNT = (CONSTANTS.finalRoundCount + CONSTANTS.practiceRoundCount)
+}
+const LOW = 0
+const HIGH = (CONSTANTS.colorOptions.length)
+const TOTAL_ROUND_COUNT = (CONSTANTS.finalRoundCount + CONSTANTS.practiceRoundCount)
 
 export const StroopTaskContext = createContext(initialTrialState)
 export const useStroopTask = () => useContext(StroopTaskContext)
@@ -27,9 +43,7 @@ export const useStroopTask = () => useContext(StroopTaskContext)
 export const StroopTaskProvider = ({ children }) => {
     // Reducers
     const [trialState, trialDispatch] = useReducer(stroopTrialReducer, initialTrialState)
-    const [roundState, roundDispatch] = useReducer(stroopRoundReducer, initialRoundState)
-    
-    // Round Reducer Methods
+
     const generateColorList = () => {
         let practiceRounds = [], 
             finalRounds = [],
@@ -43,8 +57,8 @@ export const StroopTaskProvider = ({ children }) => {
             const stroopText = { text, color, congruent }
 
             if (congruent) totalCongruent++
-
-            if (i < CONSTANTS.practiceRoundCount) practiceRounds.push(stroopText) 
+            if (i < CONSTANTS.practiceRoundCount) 
+                practiceRounds.push(stroopText) 
             else finalRounds.push(stroopText)
         }
 
@@ -55,13 +69,16 @@ export const StroopTaskProvider = ({ children }) => {
         }
     }
 
-    const round = {
-
-    }
-
     const resetTrial = () => {
         trialDispatch({type: RESET})
     }
+
+    const getTime = () => ({
+        h: new Date().getHours(),
+        m: new Date().getMinutes(),
+        sec: new Date().getSeconds(),
+        ms: new Date().getMilliseconds()
+    })
 
     const generateCurrentDateAndTime = () => {
         const currentDate = new Date() 
@@ -75,10 +92,27 @@ export const StroopTaskProvider = ({ children }) => {
         }
     }
 
+    const pushStartTime = (payload) => {
+        const {mode, roundNum} = payload
+        trialDispatch({
+            type: 'PUSH_TIME_START',
+            payload: {mode, roundNum, ...getTime()}
+        })
+    }
+
+
+    const pushEndTime = (payload) => {
+        const {mode, roundNum, keyDown} = payload
+        trialDispatch({
+            type: 'PUSH_TIME_END',
+            payload: {mode, roundNum, keyDown, ...getTime()}
+        })
+    }
+
     const newTrial = () => {
-        const { day, month, year, h, m, s } = generateCurrentDateAndTime()
-        
         resetTrial()
+
+        const { day, month, year, h, m, s } = generateCurrentDateAndTime()
         trialDispatch({
             type: SET_DATE,
             payload: { day, month, year }
@@ -89,11 +123,14 @@ export const StroopTaskProvider = ({ children }) => {
             payload: { h, m ,s }
         })
 
-        const { practiceRounds, finalRounds, totalCongruent } = generateColorList()
+        let { practiceRounds, finalRounds, totalCongruent } = generateColorList()
+
+        practiceRounds = practiceRounds.map((round, i) => ({ ...initialRoundState, ...round, roundNum: i }))
+        finalRounds = finalRounds.map((round, i) => ({ ...initialRoundState, ...round, roundNum: i }))
 
         trialDispatch({
-            type: PUSH_ALL_TRIALS,
-            payload: {practiceRounds, finalRounds}
+            type: PUSH_ALL_ROUNDS,
+            payload: { practiceRounds, finalRounds }
         })
 
         trialDispatch({
@@ -121,13 +158,59 @@ export const StroopTaskProvider = ({ children }) => {
         }
     }
 
+    const pushPracticeRounds = () => {
+        trialDispatch({
+            type: PUSH_PRACTICE_ROUNDS,
+            payload: trialState.practiceRounds
+        })
+    }
+
+    const pushButtonPress = (payload) => {
+        const {mode, roundNum, keyPressed, isCorrect} = payload
+        trialDispatch({
+            type: 'KEY_PRESS',
+            payload: {mode, roundNum, keyPressed, isCorrect}
+        })
+    }
+
     const trial = {
-        newTrial,
+        trialState,
+        pushPracticeRounds,
+        pushButtonPress,
+        pushStartTime,
+        pushEndTime,
         pushTrial,
+        newTrial,
+    }
+
+    const [roundState, roundDispatch] = useReducer(stroopRoundReducer, initialRoundState)
+    
+    // Round Reducer Methods
+    const newRound = (payload) => {
+        roundDispatch({
+            type: NEW_ROUND,
+            payload
+        })
+    }
+
+    const setRound = (payload) => {
+        roundDispatch({
+            type: SET_ROUND,
+            payload
+        })
+    }
+
+    const nextRound = (payload) => roundDispatch({ type: NEXT_ROUND, payload })
+
+    const round = {
+        roundState,
+        newRound,
+        nextRound,
+        setRound,
     }
 
 
-    const value = { trial, round }
+    const value = { trial, round, CONSTANTS, getTime }
 
     return (
         <StroopTaskContext.Provider value={ value }>

@@ -1,4 +1,5 @@
-import React from 'react'
+import React, { useEffect } from 'react'
+import ReactDOM from 'react-dom'
 import parse from 'html-react-parser'
 
 import '../styles/BlackBoard.css'

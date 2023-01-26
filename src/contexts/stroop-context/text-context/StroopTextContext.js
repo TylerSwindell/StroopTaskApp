@@ -1,8 +1,8 @@
 import { createContext, useContext, useReducer } from "react";
 import stroopTextReducer, { INITIAL_STATE as initialTextState } from "../../../reducers/stroopTextReducer";
-import { STROOP_TEXT } from "../../../config/actionTypes";
+import STROOP_TEXT_ACTION_TYPES from "../../../config/action-types/stroopTextActionTypes";
 
-const { SET_STROOP_TEXT } = STROOP_TEXT
+const { SET_STROOP_TEXT } = STROOP_TEXT_ACTION_TYPES
 
 export const StroopTextContext = createContext(initialTextState)
 export const useStroopText = () => useContext(StroopTextContext)
@@ -10,7 +10,7 @@ export const useStroopText = () => useContext(StroopTextContext)
 export function StroopTextProvider({ children }) {
 
     // Reducers
-		const [state, dispatch] = useReducer(stroopTextReducer, initialTextState)
+		const [textState, dispatch] = useReducer(stroopTextReducer, initialTextState)
 
     // Text Reducer Methods
     const setText = ({color, text}) => {
@@ -20,9 +20,19 @@ export function StroopTextProvider({ children }) {
         })
     }
 
+    const renderFixationCross = () => {
+        setText({color: 'white', text: '+'})
+    }
+
+    const renderPauseText = () => {
+        setText({color: 'white', text: 'PAUSED'})
+    }
+
     const value = { 
-        stroopText: {...state}, 
+        textState, 
         setText,
+        renderFixationCross,
+        renderPauseText
     }
 
     return (

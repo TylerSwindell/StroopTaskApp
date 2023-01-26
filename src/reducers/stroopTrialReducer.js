@@ -1,9 +1,9 @@
 import STROOP_TRIAL_ACTION_TYPES from "../config/action-types/stroopTrialActionTypes"
 
 const { 
-    SET_DATE, SET_TIME_START, SET_END_START,
-    PUSH_PRACTICE_TRIAL, PUSH_FINAL_TRIAL, RESET, 
-    PUSH_ALL_TRIALS, ADD_CORRECT, ADD_CONGRUENT,
+    SET_DATE, SET_TIME_START, SET_TIME_END,
+    PUSH_PRACTICE_ROUNDS, PUSH_FINAL_ROUNDS, RESET, 
+    PUSH_ALL_ROUNDS, ADD_CORRECT, ADD_CONGRUENT,
     SET_CONGRUENT,
 } = STROOP_TRIAL_ACTION_TYPES
 
@@ -18,7 +18,10 @@ export const INITIAL_STATE = {
     practiceRounds: [],
     finalRounds: [],
     totalCongruent: 0,
-    totalCorrect: 0 
+    totalCorrect: 0,
+    keyPressList: {},
+    startTimeList: {},
+    endTimeList: {}
 }
 
 export default function stroopTrialReducer(state, action) {
@@ -36,7 +39,7 @@ export default function stroopTrialReducer(state, action) {
                 ...state,
                 startTime: payload
             }
-        case SET_END_START:
+        case SET_TIME_END:
             return {    
                 ...state,
                 endTime: payload
@@ -47,21 +50,20 @@ export default function stroopTrialReducer(state, action) {
                 totalCongruent: payload
 
             }
-        case PUSH_PRACTICE_TRIAL: {
-            const practiceRounds = state.practiceRounds.push(payload)
+        case PUSH_PRACTICE_ROUNDS: {
             return {    
                 ...state,
-                practiceRounds
+                practiceRounds: payload
             }
         }
-        case PUSH_FINAL_TRIAL: {
+        case PUSH_FINAL_ROUNDS: {
             const finalRounds = state.finalRounds.push(payload)
             return {    
                 ...state,
                 finalRounds
             }
         }
-        case PUSH_ALL_TRIALS: {
+        case PUSH_ALL_ROUNDS: {
             const { finalRounds, practiceRounds } = payload
             return {    
                 ...state,
@@ -79,6 +81,33 @@ export default function stroopTrialReducer(state, action) {
                     ...state,
                     totalCongruent: (state.totalCongruent + 1)
                 }
+        case 'KEY_PRESS': 
+            const { mode, roundNum, keyPressed, isCorrect, pressTime } = payload
+            let newList = state.keyPressList
+                newList[(mode === 'final') ? (roundNum + 10) : roundNum] = {roundNum, mode, keyPressed, isCorrect, pressTime}
+                
+            return {
+                ...state,
+                keyPressList: newList
+            }
+        case 'PUSH_TIME_START': {
+            const {mode, roundNum, ms, sec} = payload
+            let newList = state.startTimeList
+                newList[(mode === 'final') ? (roundNum + 10) : roundNum] = { roundNum, mode, sec, ms }
+            return {
+                ...state,
+                startTimeList: newList
+            }
+        }
+        case 'PUSH_TIME_END': {
+            const {mode, roundNum, ms, sec, keyDown} = payload
+            let newList = state.endTimeList
+            newList[(mode === 'final') ? (roundNum + 10) : roundNum] = { roundNum, mode, sec, ms, keyDown}
+            return {
+                ...state,
+                endTimeList: newList
+            }
+        }
         case RESET: return INITIAL_STATE
         default: throw new Error(`No case for type ${type}`)
     }

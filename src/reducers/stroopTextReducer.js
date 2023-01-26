@@ -1,22 +1,22 @@
-import { STROOP_TEXT } from "../config/actionTypes"
+import STROOP_TEXT_ACTION_TYPES from "../config/action-types/stroopTextActionTypes"
 
-const { SET_STROOP_TEXT } = STROOP_TEXT
+const { SET_STROOP_TEXT } = STROOP_TEXT_ACTION_TYPES
 
 export const INITIAL_STATE = {
-    text: '',
-    color: '',
-    congruent: null
+    text: '+',
+    color: 'white'
 }
 
 export default function stroopTextReducer(state, action) {
     const {type, payload} = action
+    const {text, color} = payload
 
     switch(type) {
         case SET_STROOP_TEXT: 
-            const { text, color } = payload,
-                congruent = (text.toLowerCase() === color.toLowerCase())
-
-            return { text, color, congruent }
+            return {
+                text,
+                color
+            }
         
         default: throw new Error(`No case for type ${type}`)
     }

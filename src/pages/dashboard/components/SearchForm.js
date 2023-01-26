@@ -45,6 +45,7 @@ export default function SearchForm(props) {
             style={props.styles || { width: '90%', backgroundColor: 'rgba(248,249,250)' }}>
             <Form.Label className="d-flex align-items-center justify-content-center">Pid</Form.Label>
             <Form.Control
+                autoFocus
                 className="m-3"
                 type="Pid"
                 ref={pidRef}
