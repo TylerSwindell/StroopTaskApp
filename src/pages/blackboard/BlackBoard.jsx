@@ -5,11 +5,12 @@ import { useGlobal } from '../../contexts/global-context/GlobalContext'
 import { useStroopTask } from '../../contexts/stroop-context/task-context/StoopTaskContext'
 import { StroopTextProvider } from '../../contexts/stroop-context/text-context/StroopTextContext'
 import SearchForm from '../dashboard/components/SearchForm'
+import TestModeButton from "./components/TestModeButton"
 
 export default function BlackBoard() {
 
   	// Contexts
-	const {enableFullscreen, disableFullscreen} = useGlobal()
+	const {enableFullscreen, disableFullscreen, isInTestMode} = useGlobal()
     const { currentElement, mode, prevSlide, startSlides, userState, setUserState, setCurrentElement, startPractice, 
 			startStroop, endStroop, BLACKBOARD_MODES, checkMode, nextSlide } = useBlackboard(), 
 	{ LOGIN, SLIDES, PRACTICE, PRACTICE_COMPLETE, FINAL, FINAL_COMPLETE } = BLACKBOARD_MODES
@@ -24,11 +25,14 @@ export default function BlackBoard() {
     const [ searchState, setSearchState ] = useState(null)
 
     const searchFormEle = (
+		<>
+		<TestModeButton styles={styles.testMode} />
 		<SearchForm 
 			styles={{backgroundColor: 'none'}} 
 			errorState={{error, setError}} 
 			searchState={{setSearchState}}
 			customClasses='blackboardsearch'/>
+		</>
 	)
 
   	useEffect(()=> {
@@ -86,7 +90,7 @@ export default function BlackBoard() {
 			default: console.error('No case provided for keyDown in [', mode, ']: BlackBoard.js')
 		}
 	}
-
+	
 	return (
 		<div className='wh-full noselect' tabIndex={0} onKeyDown={(e)=>handleKeyDown(e)}>
 			<Card tabIndex={0} className='blackboard'>
@@ -100,4 +104,17 @@ export default function BlackBoard() {
 			</Card>
 		</div>  
 	)
+}
+
+const styles = {
+	userId: {
+		
+	},
+	testMode: {
+		position: 'absolute',
+		top: 0,
+		right: 0, 
+		margin: '1rem',
+		fontSize: '2rem',
+	}
 }

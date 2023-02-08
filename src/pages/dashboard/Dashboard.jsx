@@ -8,7 +8,7 @@ import PathList from "../../config/Paths"
 import "bootstrap/dist/css/bootstrap.min.css";
 import AddParticipant from "./components/AddParticipant"
 import SearchParticipant from "./components/SearchParticipant"
-import TestModeButton from "./components/TestModeButton"
+
 
 export default function Dashboard() {
   const [error, setError] = useState("")
