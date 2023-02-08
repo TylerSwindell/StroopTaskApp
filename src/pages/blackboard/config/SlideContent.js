@@ -48,8 +48,8 @@ const data = {
     stroopComplete: {
         slideText: `The final session is complete. 
         <br> <br>
-        You will now begin the final trial that will be recorded.`,
-        continueText: "PRESS 'SPACE' TO BEGIN",
+        Your results have been logged`,
+        continueText: "",
         continueKeys: "space"
     }
 }

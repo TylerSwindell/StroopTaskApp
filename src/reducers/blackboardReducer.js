@@ -9,7 +9,7 @@ const {
     STROOP_END, LOADING_START, LOADING_COMPLETE, 
     ROUND_NEXT, SET_PAUSE, SET_MODE, SET_STARTED,
     SET_CONTENT, SET_COMPLETE, SET_TIMESTAMP,
-    SLIDES_PREV, SET_USER_STATE,
+    SLIDES_PREV, SET_USER_STATE, STROOP_SAVE,
     SET_FIXATION_MODE
 } = BLACKBOARD_ACTION_TYPES
 
@@ -19,7 +19,8 @@ export const BLACKBOARD_MODES = {
     PRACTICE_COMPLETE: 'practice-complete', 
     FINAL: 'final', 
     FINAL_COMPLETE: 'final-complete',
-    SLIDES: 'slides'
+    SLIDES: 'slides',
+    SAVE_MODE: 'save-mode'
 }
 
 export const INITIAL_STATE = {
@@ -91,6 +92,11 @@ export default function blackboardReducer(state, action) {
                 started: true,
                 currentRound: 0,
                 currentElement: <StroopTask />
+            }
+        case STROOP_SAVE:
+            return {
+                ...state,
+                mode: BLACKBOARD_MODES.SAVE_MODE
             }
         case STROOP_END:
             return {

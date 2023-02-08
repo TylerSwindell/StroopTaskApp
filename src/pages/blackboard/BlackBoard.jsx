@@ -10,8 +10,8 @@ export default function BlackBoard() {
 
   	// Contexts
 	const {enableFullscreen, disableFullscreen} = useGlobal()
-    const { currentElement, mode, prevSlide, startSlides, setUserState, setCurrentElement, startPractice, 
-			startStroop, endStroop, BLACKBOARD_MODES, checkMode, nextSlide, currentRound } = useBlackboard(), 
+    const { currentElement, mode, prevSlide, startSlides, userState, setUserState, setCurrentElement, startPractice, 
+			startStroop, endStroop, BLACKBOARD_MODES, checkMode, nextSlide } = useBlackboard(), 
 	{ LOGIN, SLIDES, PRACTICE, PRACTICE_COMPLETE, FINAL, FINAL_COMPLETE } = BLACKBOARD_MODES
 
 	const 	{ trial,round } = useStroopTask(),
@@ -47,7 +47,7 @@ export default function BlackBoard() {
 				if (checkMode(SLIDES) && nextSlide()) return
 				else startPractice()
 				if (checkMode(PRACTICE_COMPLETE)) startStroop()
-				// if (checkMode(FINAL_COMPLETE)) endStroop()
+				if (checkMode(FINAL_COMPLETE)) endStroop()
 				else console.error('slides: no bound action to key', keyPressed, 'while in mode', mode)
 				
 				break

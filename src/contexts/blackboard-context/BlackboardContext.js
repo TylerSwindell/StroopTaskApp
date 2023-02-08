@@ -10,11 +10,11 @@ const {
     NEXT_ROUND, SET_PAUSE, SET_MODE, SET_STARTED,
     SET_CONTENT, SET_COMPLETE, SET_TIMESTAMP,
     SLIDES_PREV, SET_USER_STATE, ROUND_NEXT, 
-    SET_FIXATION_MODE, 
+    SET_FIXATION_MODE, STROOP_SAVE
 } = BLACKBOARD_ACTION_TYPES
 
 const {
-    LOGIN,
+    LOGIN, SAVE_MODE,
     PRACTICE, PRACTICE_COMPLETE,
     FINAL, FINAL_COMPLETE, SLIDES
 } = BLACKBOARD_MODES
@@ -125,6 +125,12 @@ export function BlackboardProvider({ children }) {
         })
     }
 
+    const saveStroop = () => {
+        blackboardDispatch({
+            type: STROOP_SAVE
+        })
+    }
+
     const isRoundInitialized = () => currentElement !== null
 
     const setFixationMode = (payload) => {
@@ -145,7 +151,7 @@ export function BlackboardProvider({ children }) {
         blackboardState,
         setCurrentElement,
         nextSlide, setPaused,
-        setUserState,
+        setUserState, saveStroop,
         setMode, setComplete,
         prevSlide, setTimestamp,
         nextRound, startPractice,

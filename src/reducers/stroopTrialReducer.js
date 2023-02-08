@@ -13,15 +13,15 @@ export const INITIAL_STATE = {
         month: null,
         year: null
     }, 
-    startTime:  { h: null, m: null, s: null },
-    endTime:    { h: null, m: null, s: null },
+    startTime: { h: null, m: null, s: null },
+    endTime: { h: null, m: null, s: null },
     practiceRounds: [],
     finalRounds: [],
     totalCongruent: 0,
     totalCorrect: 0,
-    keyPressList: {},
-    startTimeList: {},
-    endTimeList: {}
+    keyPressList: [],
+    startTimeList: [],
+    endTimeList:[]
 }
 
 export default function stroopTrialReducer(state, action) {
@@ -40,9 +40,10 @@ export default function stroopTrialReducer(state, action) {
                 startTime: payload
             }
         case SET_TIME_END:
+            console.log('WE ARE RUNNING THIS STUFF', payload)
             return {    
                 ...state,
-                endTime: payload
+                endTime: 'THIS IS A TIME'
             }
         case SET_CONGRUENT:
             return {
@@ -84,7 +85,7 @@ export default function stroopTrialReducer(state, action) {
         case 'KEY_PRESS': 
             const { mode, roundNum, keyPressed, isCorrect, pressTime } = payload
             let newList = state.keyPressList
-                newList[(mode === 'final') ? (roundNum + 10) : roundNum] = {roundNum, mode, keyPressed, isCorrect, pressTime}
+                newList[(mode === 'final') ? (roundNum + 1) : roundNum] = {roundNum, mode, keyPressed, isCorrect, pressTime}
                 
             return {
                 ...state,
@@ -93,7 +94,7 @@ export default function stroopTrialReducer(state, action) {
         case 'PUSH_TIME_START': {
             const {mode, roundNum, ms, sec} = payload
             let newList = state.startTimeList
-                newList[(mode === 'final') ? (roundNum + 10) : roundNum] = { roundNum, mode, sec, ms }
+                newList[(mode === 'final') ? (roundNum + 1) : roundNum] = { roundNum, mode, sec, ms }
             return {
                 ...state,
                 startTimeList: newList
@@ -102,7 +103,7 @@ export default function stroopTrialReducer(state, action) {
         case 'PUSH_TIME_END': {
             const {mode, roundNum, ms, sec, keyDown} = payload
             let newList = state.endTimeList
-            newList[(mode === 'final') ? (roundNum + 10) : roundNum] = { roundNum, mode, sec, ms, keyDown}
+            newList[(mode === 'final') ? (roundNum + 1) : roundNum] = { roundNum, mode, sec, ms, keyDown}
             return {
                 ...state,
                 endTimeList: newList

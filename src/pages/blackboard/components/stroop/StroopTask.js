@@ -1,6 +1,4 @@
-import { useEffect, useState } from "react"
-import Slide from "../Slide"
-import SlideContent from '../../config/SlideContent'
+import { useEffect, useState, useRef } from "react"
 import StroopText from "./StroopText"
 import { useBlackboard } from "../../../../contexts/blackboard-context/BlackboardContext"
 import { useStroopTask } from "../../../../contexts/stroop-context/task-context/StoopTaskContext"
@@ -9,29 +7,36 @@ import { stroopWordInterval } from "../../config/TextSettings"
 
 export default function StroopTask() {
 	// Contexts
-	const { textState, setText, renderFixationCross, renderPauseText } = useStroopText()
-	const { trial, round, CONSTANTS, getTime } = useStroopTask(),
-	{ trialState, newTrial, pushPracticeRounds, pushButtonPress, pushStartTime, pushEndTime } = trial,
-	{ roundState, setRound, setCorrect } = round,
-	{ stroopTaskInterval, fixationCrossTimeout, practiceRoundCount, finalRoundCount } = CONSTANTS
-	
-	const { mode, endStroop, endPractice, nextRound, BLACKBOARD_MODES, blackboardState } = useBlackboard(),
-	{ currentRound } = blackboardState
-	
+
+	// Stroop Text Context
+	const { textState, setText, renderFixationCross } = useStroopText()
+
+	// Stroop Task / Round Contexts
+	const { trial, round, CONSTANTS, getTime } = useStroopTask()
+
+	// context destructuring
 	const { 
-		LOGIN, PRACTICE, PRACTICE_COMPLETE,
-		FINAL, FINAL_COMPLETE, SLIDES
-	} = BLACKBOARD_MODES
+		trialState, pushButtonPress, pushStartTime, pushEndTime, consolidateData, setEndTime, getPracticeRoundCount, getFinalRoundCount
+	} = trial
+	const { 
+		roundState, setRound 
+	} = round
+	
+	// Blackboard Context / State
+	const { mode, endStroop, endPractice, nextRound, BLACKBOARD_MODES, blackboardState, saveStroop } = useBlackboard()
+	const { currentRound } = blackboardState
+
+	// CONSTANTS
+	const { fixationCrossTimeout } = CONSTANTS
+	const {  PRACTICE, FINAL, SAVE_MODE } = BLACKBOARD_MODES
 
 	// Local State
-		const [ keyDown, setKeyDown ] = useState(false)
-		const [ isPaused, setIsPaused ] = useState(false)
-		const [roundInitialized,setRoundInitialized] = useState(false)
+	const [ keyDown, setKeyDown ] = useState(false)
+	const [ saveState, setSaveState ] = useState(false)
+	const [ isPaused, setIsPaused ] = useState(false)
+	const [ roundInitialized,setRoundInitialized ] = useState(false)
 
-		/* TODO:
-		 * Figure out setRound discrepency in this section
-		 * Rounds are being set more rapidly than the UI can update
-		 */
+	const focusRef = useRef(null)
 
 	const mainLoop = () => {
 		console.log(`%cMAIN LOOP START | NUM: ${currentRound}`, 'color:orange; font-size: 1.2rem')
@@ -40,6 +45,7 @@ export default function StroopTask() {
 			const {color, text} = roundState
 			pushStartTime({mode, roundNum:currentRound})
 			setText({color, text})
+			console.log(roundState)
 			setKeyDown(false)
 			console.log(roundState)
 			console.log(trialState)
@@ -55,6 +61,7 @@ export default function StroopTask() {
 	}
 
 	useEffect(() => {
+		focusRef.current.focus()
 		console.log(`%cROUND START | NUM: ${currentRound}`, 'color:green; font-size: 1.3rem')
 		if (!roundInitialized) {
 			setRound(trialState[`${mode}Rounds`][0])
@@ -64,17 +71,27 @@ export default function StroopTask() {
 
 		switch (mode) {
 			case PRACTICE:
-				if (currentRound > 10) endPractice()
+				if (currentRound >= getPracticeRoundCount()) endPractice()
 				else mainLoop()
 				break
 			case FINAL:
-				if (currentRound > 40) endStroop()
-				else mainLoop()
+				if (currentRound >= getFinalRoundCount()) {
+					saveStroop()
+					setSaveState()
+				}else mainLoop()
+				break
+			case SAVE_MODE:
+				//TODO:: FIGURE OUT HOW TO SAVE DATA BETTER OR PROCESS IT AFTERWARDS
+				
+				console.log('SAVE MODE!!!')
+				setEndTime()
+				consolidateData()
+				endStroop()
 				break
 			default: console.error(`NO MODE FOUND:`, mode)
 		}
 		
-	}, [currentRound, roundInitialized])
+	}, [currentRound, roundInitialized, saveState])
 
 	const handleKeyDown = e => {
 		e.preventDefault()
@@ -96,13 +113,18 @@ export default function StroopTask() {
 				const timePressed = getTime()
 				pushEndTime({mode, roundNum:currentRound, keyDown: keyUpper})
 				pushButtonPress({mode, roundNum: currentRound, keyPressed: keyUpper, isCorrect, timePressed})
-				console.log('pressed:',keyLower,'\nstate:', roundState.color.charAt(0))
-				console.log(roundState)
 
-				setText({
-					text: (isCorrect) ? 'Correct' : 'Incorrect',
-					color: (isCorrect) ? 'green' : 'red',
-				})
+				const msgStyleProps = (isCorrect) ? {textColor: 'green', backgroundColor: 'rgb(9, 15, 9)'} : {textColor: 'red', backgroundColor: 'rgb(26, 7, 7)'}
+				const msgStyle = `color:${msgStyleProps.textColor}; background-color: ${msgStyleProps.backgroundColor}; font-size: 1.5rem; padding: .5rem 1rem; width: 100%`
+				const roundColorCode = roundState.color.charAt(0).toUpperCase()
+				console.log(`%croundNum: ${currentRound}\nkeyPressed: ${keyUpper}\nroundColor: ${roundColorCode}`, msgStyle)
+
+				if (mode === PRACTICE) {
+					setText({
+						text: (isCorrect) ? 'Correct' : 'Incorrect',
+						color: (isCorrect) ? 'green' : 'red',
+					})
+				} else if (mode === FINAL) renderFixationCross()
 				break
 
 			default: console.error('Not a valid keyPress')
@@ -112,8 +134,9 @@ export default function StroopTask() {
   	return ( 
 		<div style={{width: '100%', height: '100%'}} 
 			onKeyDown={handleKeyDown}
-			tabIndex={0}>
-				{<StroopText color={textState.color} text={textState.text} />}
+			tabIndex={0}
+			ref={focusRef}>
+				{<StroopText color={textState.color} text={textState.text}/>}
 				{keyDown}
 		</div> 
 	)

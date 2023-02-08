@@ -8,6 +8,7 @@ import PathList from "../../config/Paths"
 import "bootstrap/dist/css/bootstrap.min.css";
 import AddParticipant from "./components/AddParticipant"
 import SearchParticipant from "./components/SearchParticipant"
+import TestModeButton from "./components/TestModeButton"
 
 export default function Dashboard() {
   const [error, setError] = useState("")
@@ -32,7 +33,7 @@ export default function Dashboard() {
             <div style={{borderRight: '1px solid rgba(0, 0, 0, 0.175)'}}></div>
             <div className="d-flex flex-column justify-content-evenly">
               <AddParticipant/>
-              <div className="d-flex align-items-center" style={{height: '100%', borderTop: '1px solid rgba(0, 0, 0, 0.175)'}}>
+              <div className="d-flex align-items-center flex-justify-center" style={{height: '100%', borderTop: '1px solid rgba(0, 0, 0, 0.175)'}}>
                 <Button style={{padding: '6px 12px', maxHeight: '3rem'}} className="w-50 text-center"  onClick={handleLogout}>
                   Log Out
                 </Button>
