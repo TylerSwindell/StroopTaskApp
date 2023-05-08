@@ -38,6 +38,7 @@ export default function BlackBoard() {
   	useEffect(()=> {
 		if (!searchState) setCurrentElement(searchFormEle)
 		else {
+			console.log(searchState)
       		setUserState(searchState)
 			startSlides()
 			newTrial()
@@ -47,7 +48,7 @@ export default function BlackBoard() {
 	function handleSlidesKeyDown(keyPressed) {
 		console.log('keyDown: ', keyPressed, '\nMode:', mode)
 		switch(keyPressed) {
-			case 32: 
+			case 32: // Space bar
 				if (checkMode(SLIDES) && nextSlide()) return
 				else startPractice()
 				if (checkMode(PRACTICE_COMPLETE)) startStroop()
@@ -55,9 +56,9 @@ export default function BlackBoard() {
 				else console.error('slides: no bound action to key', keyPressed, 'while in mode', mode)
 				
 				break
-			case 37: if (checkMode(SLIDES)) prevSlide()
+			case 37: if (checkMode(SLIDES)) prevSlide() // Left arrow key
 				break
-			case 70: console.log('fullscreen')
+			case 70: console.log('fullscreen') // F key
 				break
 			default: console.error('slides: no bound action to key', keyPressed)
 		}

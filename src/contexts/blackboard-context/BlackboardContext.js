@@ -28,12 +28,10 @@ export function useBlackboard() {
 export function BlackboardProvider({ children }) {
 
     // Reducers
-	const [blackboardState, blackboardDispatch] = useReducer(blackboardReducer, initialBlackboardState),
-        {
-            timestamp, mode, currentRound, started,
+	const [blackboardState, blackboardDispatch] = useReducer(blackboardReducer, initialBlackboardState)
+    const { timestamp, mode, currentRound, started,
             complete, paused, currentSlide, currentElement,
-            userState, totalSlides
-        } = blackboardState
+            userState, totalSlides } = blackboardState
 
     // Context Methods
     

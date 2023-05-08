@@ -1,20 +1,20 @@
 .MainView {
-    display: grid;
-    place-items: center;
-    width: 100%;
-    max-width: 1250px;
-    max-height: 698px;
-    min-height: 700px;
-  }
-  
-  .MainView-fs {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height:  100vh;
-    background-color: rgb(42, 42, 42);
-    padding: 0;
-    margin: 0;
-    border-radius: 0;
-  }
+  display: grid;
+  place-items: center;
+  width: 100%;
+  max-width: 1250px;
+  max-height: 698px;
+  min-height: 700px;
+}
+
+.MainView-fs {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgb(42, 42, 42);
+  padding: 0;
+  margin: 0;
+  border-radius: 0;
+}

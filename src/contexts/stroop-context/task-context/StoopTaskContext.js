@@ -8,11 +8,11 @@ import stroopRoundReducer, { INITIAL_STATE as initialRoundState } from "../../..
 // ACTION TYPE IMPORTS
 import STROOP_TRIAL_ACTION_TYPES from "../../../config/action-types/stroopTrialActionTypes";
 import STROOP_ROUND_ACTION_TYPES from "../../../config/action-types/stroopRoundActionTypes"
-import { doc, setDoc } from "firebase/firestore";
+import { doc, setDoc, updateDoc } from "firebase/firestore";
 import { db } from "../../../firebase-config";
 import { useBlackboard } from "../../blackboard-context/BlackboardContext";
 import StroopText from "../../../pages/blackboard/components/stroop/StroopText";
-import { numberOfRounds, numberOfTests, testMode } from "../../../config/MainConfig";
+import { activeFirestore, numberOfRounds, numberOfTests, testMode } from "../../../config/MainConfig";
 import { useGlobal } from "../../global-context/GlobalContext";
 
 // ACTION TYPE DESTRUCTURING
@@ -65,10 +65,13 @@ export const StroopTaskProvider = ({ children }) => {
             const congruent = (text === color)
             const stroopText = { text, color, congruent }
 
-            if (congruent) totalCongruent++
+            
             if (i < getPracticeRoundCount()) 
                 practiceRounds.push(stroopText) 
-            else finalRounds.push(stroopText)
+            else {
+                if (congruent) totalCongruent++
+                finalRounds.push(stroopText)
+            }
         }
 
         return {
@@ -187,41 +190,69 @@ export const StroopTaskProvider = ({ children }) => {
     }
 
     const pushButtonPress = (payload) => {
-        const {mode, roundNum, keyPressed, isCorrect} = payload
+        const {mode, roundNum, keyPressed, isCorrect, isCongruent} = payload
         trialDispatch({
             type: 'KEY_PRESS',
-            payload: {mode, roundNum, keyPressed, isCorrect, pressTime: getTime()}
+            payload: {mode, roundNum, keyPressed, isCorrect, isCongruent, pressTime: getTime()}
         })
     }
 
     // 
-    const consolidateData = async () => {    
+    const consolidateData = async (data) => {    
         let listOfTrials = userState.listOfTrials
-        console.log(trialState)
         const {totalCongruent} = trialState
 
         let totalCorrect = 0
+        let prevRoundNum = -1
+        let avgReactionTimeList = []
+        let avgReactionTime = 0
         trialState.keyPressList.forEach((keyPress) => {
-            if (keyPress.isCorrect) totalCorrect++
+            if (keyPress.roundNum === prevRoundNum) return
+            if (keyPress.mode === 'final' && keyPress.isCorrect) totalCorrect++
+            //console.log(keyPress)
         })
 
-        const dataSummary = {
+        let dataSummary = {
             sessionNumber: listOfTrials.length,
             totalCongruent,
-            totalCorrect
+            totalCorrect,
+            avgCongruentReaction: 0,
+            avgIncongruentReaction: 0,
+            avgReaction: 0
             
-
         }
-        listOfTrials.push({trialState,dataSummary})
+        
+        const endTimeList = trialState.endTimeList
+        const startTimeList = trialState.startTimeList
+        let roundData = []
+        trialState.practiceRounds.forEach(round => {
+            const {roundNum, color, text, congruent} = round
+            roundData.push({ roundNum, color, text, congruent, mode: 'practice' })
+        })
+        trialState.finalRounds.forEach(round => {
+            const {roundNum, color, text, congruent} = round
+            roundData.push({ roundNum, color, text, congruent, mode: 'final' })
+        })
 
-        console.log(trialState, dataSummary)
+        listOfTrials.push({dataSummary, endTimeList, startTimeList, roundData})
 
-        setUserState({...userState, listOfTrials})
 
-        try { await setDoc(doc(db, "participants", userState.pid), userState) } 
+        const updatedUserState = {
+			pid: userState.pid,
+			signupDate: userState.signupDate,
+            listOfTrials,
+        }
+        
+        const userRef = doc(db, activeFirestore, userState.pid)
+
+        console.log(updatedUserState)
+
+        try { 
+            await updateDoc(userRef, updatedUserState) 
+        } 
 		catch (e) { 
+            //setCurrentElement(<StroopText color='red' text='Error Uploading Data'/>)
             console.error("Error adding document: ", e) 
-            setCurrentElement(<StroopText color='red' text='Error Uploading Data'/>)
         }
     }
 

@@ -1,4 +1,5 @@
 export const 
+    activeFirestore = 'main-trials',
     strictMode = false,
     demoMode = false,
     testMode = false,

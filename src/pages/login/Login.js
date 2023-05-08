@@ -1,32 +1,31 @@
-import React, { useRef, useState } from "react"
-import { Form, Button, Card, Alert } from "react-bootstrap"
-import { useAuth } from "../../contexts/auth-context/AuthContext"
-import { Link, useNavigate } from "react-router-dom"
-import PathList from "../../config/Paths"
+import React, { useRef, useState } from "react";
+import { Form, Button, Card, Alert } from "react-bootstrap";
+import { useAuth } from "../../contexts/auth-context/AuthContext";
+import { Link, useNavigate } from "react-router-dom";
+import PathList from "../../config/Paths";
 
 export default function Login() {
-  const emailRef = useRef()
-  const passwordRef = useRef()
-  const { loginAuth } = useAuth()
-  const [error, setError] = useState("")
-  const [loading, setLoading] = useState(false)
-  const navigate = useNavigate()
+  const emailRef = useRef();
+  const passwordRef = useRef();
+  const { loginAuth } = useAuth();
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
   async function handleSubmit(e) {
-    e.preventDefault()
-
+    e.preventDefault();
 
     try {
-      setError("")
-      setLoading(true)
-      await loginAuth(emailRef.current.value, passwordRef.current.value)
-      navigate(PathList.home)
-    } catch(err) {
-      setError("Failed to log in")
-      console.log(err)
+      setError("");
+      setLoading(true);
+      await loginAuth(emailRef.current.value, passwordRef.current.value);
+      navigate(PathList.home);
+    } catch (err) {
+      setError("Failed to log in");
+      console.log(err);
     }
 
-    setLoading(false)
+    setLoading(false);
   }
 
   return (
@@ -54,5 +53,5 @@ export default function Login() {
         {error && <Alert variant="danger">{error}</Alert>}
       </Card>
     </>
-  )
+  );
 }
